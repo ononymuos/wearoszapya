@@ -1,79 +1,82 @@
-<p align="center">
-  <img src="art/banner.png" alt="Banner">
-</p>
+# WearOsZapya ⚡📱⌚
 
-<a href="https://play.google.com/store/apps/details?id=com.bastyoliva.wearoszapya">
-  <img src="https://github.com/dertefter/some_stuff_for_me/blob/master/com.bastyoliva.wearoszapya_downloads.svg" alt="Google Play" height="60">
-</a><a href="https://play.google.com/store/apps/details?id=com.bastyoliva.wearoszapya">
-  <img src="https://github.com/dertefter/some_stuff_for_me/blob/master/com.bastyoliva.wearoszapya_rating.svg" alt="Google Play" height="60">
-</a><a href="README_RU.md">
-  <img src="https://img.shields.io/badge/Russian-blue?style=for-the-badge" alt="Русский язык" height="60">
-</a><a href="https://t.me/wearoszapya_app">
-  <img src="https://img.shields.io/badge/Telegram-Chat?style=for-the-badge&logo=telegram&logoColor=%23ffffff&color=%2327b0f6" alt="Telegram" height="60">
-</a>
+WearOsZapya is an ultra-fast file transfer and file manager app for Wear OS and Android, inspired by Zapya and SHAREit.
 
-# WearOsZapya
+While traditional Wear OS file sharing apps rely solely on Bluetooth (throttled to ~20–50 KB/s), **WearOsZapya** features a **Dual-Mode Turbo Boost Engine** that dynamically switches between Bluetooth and high-speed Wi-Fi / Hotspot (10–30 MB/s) with **zero transfer interruption and byte-offset resuming**.
 
-A simple open-source file manager designed for Wear OS ⌚
+---
 
-### App Features:
+## ⚡ Core Features
 
-- File transfer from phone to watch ⌚➡️📱
-- View, open, delete files on Wear OS device 📂
-- Clipboard: cut / copy / paste 📋
-- Pin files and folders to the main screen 📌
-- Built-in image viewer 🖼️
-- Built-in PDF viewer 📄
+- ⚡ **Turbo Boost (Hotspot / Wi-Fi Transfer)**:
+  - High-speed direct TCP streaming at 10–30 MB/s.
+  - Automatically acquires high-bandwidth Wi-Fi network capability (`NetworkCapabilities.TRANSPORT_WIFI`) on Wear OS, bypassing normal Bluetooth throttling.
+- 🔄 **Seamless Mid-Transfer Transport Switching & Byte-Level Resuming**:
+  - Start sending over Bluetooth immediately without waiting for Wi-Fi.
+  - As soon as Hotspot or local Wi-Fi is detected, transfer switches automatically to Turbo mode.
+  - **Transfers never restart**: If 2 MB was transferred via Bluetooth, Turbo Boost connects and continues from exact byte `2,097,152` using atomic seek offsets in `.part` files.
+  - If Wi-Fi disconnects mid-transfer, it falls back to Bluetooth seamlessly.
+- 📂 **Full-Featured Wear OS File Manager**:
+  - Browse, view, open, and delete files on your watch.
+  - Clipboard operations: Cut, Copy, Paste.
+  - Pin favorite files and folders to the home screen.
+  - Built-in media viewers: Photos, Music, Videos, and PDF documents.
+- 🎯 **Modern Electric Violet & Amber UI**:
+  - Custom watch launcher icons.
+  - Real-time transfer speed (`⚡ 18.5 MB/s`), byte progress, and one-tap Turbo activation.
 
-### Screenshots
-<p align="center">  
-  <img src="art/screenshot_1.png" width="160" alt="Screenshot 1">  
-  <img src="art/screenshot_2.png" width="160" alt="Screenshot 2">  
-  <img src="art/screenshot_3.png" width="160" alt="Screenshot 3">  
-  <img src="art/screenshot_4.png" width="160" alt="Screenshot 4">  
-  <img src="art/screenshot_5.png" width="160" alt="Screenshot 5">  
-</p>  
+---
 
-### File transfer from phone to watch:
+## 🏗️ Turbo Boost Architecture
 
-You can transfer files from your smartphone to your watch. To do this, install the app on both devices and make sure the connection with the watch is established.
+```
+ Mobile Phone                                           Wear OS Watch
+ [FileTransferService]                                [FileReceiverService]
+          │                                                     │
+          │────── 1. Start Bluetooth Transfer (Control) ───────>│
+          │       (Standard ChannelClient stream)               │
+          │                                                     │
+          │<───── 2. /zapya/boost/ready (IP, Port, Offset) ─────│ (Requests Wi-Fi
+          │                                                     │  via ConnectivityManager)
+          │                                                     │
+          │====== 3. Turbo High-Speed TCP Stream (8988) =======>│ (10-30 MB/s)
+          │       [RandomAccessFile seek(startOffset)]          │
+          │                                                     │
+          │────── 4. Fallback to Bluetooth if Wi-Fi drops ─────>│ (Zero byte loss)
+```
 
-<p align="center">
-  <img src="art/example_file_transfer.gif" width="320" alt="example_file_transfer">
-</p>
+---
 
-### ⚠️ File Access Permission ⚠️
+## 💎 Crypto Donations
 
-To use the app on your watch as a file manager, you need to grant file access permission: `MANAGE_EXTERNAL_STORAGE`. Due to Wear OS platform limitations, the app cannot request this permission on its own.
-However, you can use the app without it in a limited mode. You probably **don't need full file access if you just want to transfer a file from your phone and open it on your watch**.
+If you appreciate WearOsZapya, you can support continuous development via cryptocurrency:
 
-#### What works without `MANAGE_EXTERNAL_STORAGE` permission:
+| Network / Asset | Address |
+| :--- | :--- |
+| **Ethereum (ETH)** | `0xA54a491a40e57229f66Fa17f5C6c7f461b262c1d` |
+| **Bitcoin (BTC)** | `bc1q78zrnqxes8gdg8c9l34z4sg5258xpsz72at23x` |
+| **Tether (USDT TRC20)** | `TVfsR7tHZvbKGK9gMasXFxcoGL43yNG6jV` |
 
-- "Photos": view the list of images stored on the device
-- "Videos": videos stored on the device
-- "Music": list of audio files on the device
-- "Received": files received from the phone
-- Opening the above files (if software to open these file types is available)
+*(Donation QR codes are also built directly into the mobile and watch apps under Settings > Support Me)*
 
-#### How to grant permission manually:
-If you decide that you need full access to files, you can grant permission using ADB:
+---
 
-1. Connect the watch to the computer via ADB
-2. Run the command:  
-   ``adb shell appops set --uid com.bastyoliva.wearoszapya MANAGE_EXTERNAL_STORAGE allow``
-3. Restart the app
+## 📬 Contact & Support
 
-### FAQ [HERE](FAQ.md)
+- **Developer Email**: [basty.oliva2011@gmail.com](mailto:basty.oliva2011@gmail.com)
+- **Repository**: [https://github.com/bastyoliva/wearoszapya](https://github.com/bastyoliva/wearoszapya)
 
-### 💎 Support me:
-[https://www.donationalerts.com/r/dertefter](https://www.donationalerts.com/r/dertefter)
+---
 
-## Star History
+## ⚠️ File Access Permissions
 
-<a href="https://star-history.dera.page/dertefter/WearOsZapya">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=dertefter/WearOsZapya&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=dertefter/WearOsZapya" />
-   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=dertefter/WearOsZapya" />
- </picture>
-</a>
+To manage files on Wear OS outside the app sandbox, grant `MANAGE_EXTERNAL_STORAGE` via ADB if needed:
+```bash
+adb shell appops set --uid com.bastyoliva.wearoszapya MANAGE_EXTERNAL_STORAGE allow
+```
+Standard photo, music, video, and received files are accessible without ADB permissions.
+
+---
+
+## 📄 License
+WearOsZapya is licensed under the Apache License 2.0.
