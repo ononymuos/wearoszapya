@@ -1,79 +1,45 @@
-<p align="center">  
-  <img src="art/banner.png" alt="Banner">
-</p>  
+# WearOsZapya ⚡📱⌚
 
-<a href="https://play.google.com/store/apps/details?id=com.bastyoliva.wearoszapya">  
-  <img src="https://github.com/dertefter/some_stuff_for_me/blob/master/com.bastyoliva.wearoszapya_downloads.svg" alt="Google Play" height="60">  
-</a><a href="https://play.google.com/store/apps/details?id=com.bastyoliva.wearoszapya">  
-  <img src="https://github.com/dertefter/some_stuff_for_me/blob/master/com.bastyoliva.wearoszapya_rating.svg" alt="Google Play" height="60">  
-</a><a href="README.md">
-  <img src="https://img.shields.io/badge/English-blue?style=for-the-badge" alt="English language" height="60">
-</a><a href="https://t.me/wearoszapya_app">
-  <img src="https://img.shields.io/badge/Telegram-Chat?style=for-the-badge&logo=telegram&logoColor=%23ffffff&color=%2327b0f6" alt="Telegram" height="60">
-</a>
+WearOsZapya — сверхбыстрый инструмент для передачи файлов и файловый менеджер для Wear OS и Android в стиле Zapya и SHAREit.
 
-# WearOsZapya
+В отличие от традиционных решений для Wear OS, ограниченных только Bluetooth (~20–50 КБ/с), **WearOsZapya** оснащена **двухрежимным движком Turbo Boost**, который динамически переключается между Bluetooth и высокоскоростным Wi-Fi / Hotspot (10–30 МБ/с) **без прерывания передачи и с продолжением с точного байта**.
 
-Простой файловый менеджер с открытым исходным кодом. Разработан для Wear OS ⌚
+---
 
-### Возможности приложения:
+## ⚡ Основные возможности
 
-- Передача файлов с телефона на часы ⌚➡️📱
-- Просмотр, открытие, удаление файлов на устройстве Wear OS 📂
-- Буфер обмена: вырезать / копировать / вставить 📋
-- Закрепление файлов и папок на главном экране 📌
-- Встроенный просмотрщик изображений 🖼️
-- Встроенный просмотрщик PDF 📄
+- ⚡ **Turbo Boost (Передача по Hotspot / Wi-Fi)**:
+  - Прямой TCP-стриминг со скоростью 10–30 МБ/с.
+  - Автоматическая активация высокоскоростного сетевого интерфейса Wi-Fi (`NetworkCapabilities.TRANSPORT_WIFI`) на Wear OS в обход ограничений Bluetooth.
+- 🔄 **Бесшовное переключение и докачка с любого байта**:
+  - Передача стартует моментально по Bluetooth без ожидания Wi-Fi.
+  - При появлении точки доступа или сети Wi-Fi передача переключается на Turbo-режим.
+  - **Никаких сбросов**: Если 2 МБ уже передано по Bluetooth, Turbo-режим продолжает с байта `2 097 152` через `RandomAccessFile`.
+  - При обрыве Wi-Fi связь автоматически возвращается на Bluetooth.
+- 📂 **Полноценный файловый менеджер для Wear OS**:
+  - Навигация по файловой системе часов, удаление и переименование.
+  - Буфер обмена: вырезать, копировать, вставить.
+  - Закрепление часто используемых файлов и папок на главном экране.
+  - Встроенные просмотрщики: Фото, Музыка, Видео и PDF-документы.
 
-### Скриншоты
-<p align="center">  
-  <img src="art/screenshot_1.png" width="160" alt="Screenshot 1">  
-  <img src="art/screenshot_2.png" width="160" alt="Screenshot 2">  
-  <img src="art/screenshot_3.png" width="160" alt="Screenshot 3">  
-  <img src="art/screenshot_4.png" width="160" alt="Screenshot 4">  
-  <img src="art/screenshot_5.png" width="160" alt="Screenshot 5">  
-</p>  
+---
 
-### Передача файлов с телефона на часы:
+## 💎 Поддержать проект (Crypto)
 
-Вы можете передавать файлы со смартфона на часы. Для этого установите приложение на оба устройства и убедитесь в том, что связь с часами установлена.
+| Монета / Сеть | Адрес |
+| :--- | :--- |
+| **Ethereum (ETH)** | `0xA54a491a40e57229f66Fa17f5C6c7f461b262c1d` |
+| **Bitcoin (BTC)** | `bc1q78zrnqxes8gdg8c9l34z4sg5258xpsz72at23x` |
+| **Tether (USDT TRC20)** | `TVfsR7tHZvbKGK9gMasXFxcoGL43yNG6jV` |
 
-<p align="center">
-  <img src="art/example_file_transfer.gif" width="320" alt="example_file_transfer">
-</p>
+---
 
-### ⚠️ Разрешение на доступ к файлам ⚠️
+## 📬 Контакты
 
-Чтобы использовать приложение на часах как файловый менеджер вам необходимо выдать разрешение на доступ к файлам: `MANAGE_EXTERNAL_STORAGE`. Из-за ограничений платформы Wear OS приложение не может самостоятельно выдать разрешения на доступ к файлам.
-Однако вы можете пользоваться приложением и без этого в ограниченном режиме. Вероятно, что **полный доступ к файлам вам не нужен, если вы хотите просто передать файл с телефона и открыть его на часах**.
+- **Email разработчика**: [basty.oliva2011@gmail.com](mailto:basty.oliva2011@gmail.com)
+- **Репозиторий**: [https://github.com/bastyoliva/wearoszapya](https://github.com/bastyoliva/wearoszapya)
 
-#### Что работает без разрешения `MANAGE_EXTERNAL_STORAGE` :
+---
 
-- «Фото»: просмотр списка изображений, сохранённых на устройстве
-- «Видео»: видео, сохранённые на устройстве
-- «Музыка»: список аудиофайлов на устройстве
-- «Получено»: файлы, полученные с телефона
-- Открытие вышеперечисленных файлов (при налиии ПО для открытия этих типов файлов)
-
-#### Как выдать разрешение вручную:
-Если вы решили, что вам необходим полный доступ к файлам, вы можете выдать разрешение с помощью ADB:
-
-1. Подключите часы к компьютеру через ADB
-2. Выполните команду:  
-   ``adb shell appops set --uid com.bastyoliva.wearoszapya MANAGE_EXTERNAL_STORAGE allow``
-3. Перезапустите приложение
-
-### FAQ [ТУТ](FAQ_RU.md)
-
-### 💎 Поддержать меня:
-[https://www.donationalerts.com/r/dertefter](https://www.donationalerts.com/r/dertefter)
-
-### Звёздочки
-
-<a href="https://star-history.dera.page/#dertefter/WearOsZapya">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=dertefter/WearOsZapya&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=dertefter/WearOsZapya" />
-   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=dertefter/WearOsZapya" />
- </picture>
-</a>
+## 📄 Лицензия
+WearOsZapya распространяется под лицензией Apache License 2.0.
