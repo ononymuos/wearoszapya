@@ -1,0 +1,43 @@
+<resources>
+    <string name="share_label">Отправить на часы</string>
+    <string name="select_files">Выбрать файлы</string>
+    <string name="queue_empty">Очередь пуста</string>
+    <string name="transfer_queue_title">Очередь отправки файлов</string>
+    <string name="status_pending">В очереди</string>
+    <string name="status_sending">Отправка…</string>
+    <string name="status_waiting_watch">Ожидание часов…</string>
+    <string name="status_success">Готово</string>
+    <string name="status_error">Ошибка</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_remove">Убрать</string>
+    <string name="notification_channel_name">Передача файлов</string>
+    <string name="notification_channel_desc">Уведомления о передаче файлов на Wear OS</string>
+    <string name="notification_sending_title">Отправка файла…</string>
+    <string name="notification_success_title">Файл отправлен</string>
+    <string name="notification_error_title">Ошибка отправки</string>
+    <string name="notification_sending_desc">Файл %1$s передается на часы (%2$d%%)</string>
+    <string name="notification_success_desc">Файл %1$s успешно сохранен на часах</string>
+    <string name="notification_error_desc">Не удалось отправить %1$s</string>
+    <string name="notification_preparing">Подготовка…</string>
+    <string name="notification_file_queue">Очередь файлов</string>
+    <string name="error_no_nodes">Нет подключенных устройств</string>
+    <string name="error_input_stream">Не удалось открыть файл</string>
+    <string name="error_canceled">Отменено</string>
+    <string name="file_default_name">файл</string>
+    <string name="watch_connected">Часы подключены</string>
+    <string name="watch_not_found">Часы не найдены</string>
+    <string name="ready_to_send">Готов к отправке</string>
+    <string name="check_connection">Проверьте подключение к часам Wear OS</string>
+    <string name="watch_not_nearby">Часы не поблизости</string>
+    <string name="app_not_installed">Приложение не установлено на часах</string>
+    <string name="install_app_on_watch">Пожалуйста, установите приложение на ваши часы</string>
+    <string name="bring_watch_closer">Убедитесь, что часы находятся рядом</string>
+
+    <string name="about_oss_licenses">Лицензии ПО</string>
+    <string name="about_telegram_chat">Telegram чат</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_donate">Поддержать меня</string>
+    <string name="error_no_app_to_open_link">Не найдено приложение для открытия ссылки</string>
+    <string name="back_content_description">Назад</string>
+    <string name="menu_content_description">Меню</string>
+</resources>

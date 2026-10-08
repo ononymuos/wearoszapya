@@ -1,0 +1,44 @@
+<resources>
+    <string name="mobile_app_name" translatable="false">WearOsZapya</string>
+    <string name="share_label">Send to watch</string>
+    <string name="select_files">Select files</string>
+    <string name="queue_empty">Queue is empty</string>
+    <string name="transfer_queue_title">File transfer queue</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_sending">Sending…</string>
+    <string name="status_waiting_watch">Waiting for watch…</string>
+    <string name="status_success">Success</string>
+    <string name="status_error">Error</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_remove">Remove</string>
+    <string name="notification_channel_name">File Transfer</string>
+    <string name="notification_channel_desc">Notifications for file transfer to Wear OS</string>
+    <string name="notification_sending_title">Sending file…</string>
+    <string name="notification_success_title">File sent</string>
+    <string name="notification_error_title">Transfer error</string>
+    <string name="notification_sending_desc">File %1$s is being transferred to watch (%2$d%%)</string>
+    <string name="notification_success_desc">File %1$s successfully saved on watch</string>
+    <string name="notification_error_desc">Failed to send %1$s</string>
+    <string name="notification_preparing">Preparing…</string>
+    <string name="notification_file_queue">File queue</string>
+    <string name="error_no_nodes">No connected nodes</string>
+    <string name="error_input_stream">Failed to open input stream</string>
+    <string name="error_canceled">Item canceled</string>
+    <string name="file_default_name">file</string>
+    <string name="watch_connected">Watch connected</string>
+    <string name="watch_not_found">Watch not found</string>
+    <string name="ready_to_send">Ready to send</string>
+    <string name="check_connection">Check connection to Wear OS watch</string>
+    <string name="watch_not_nearby">Watch is not nearby</string>
+    <string name="app_not_installed">App not installed on watch</string>
+    <string name="install_app_on_watch">Please install the app on your watch</string>
+    <string name="bring_watch_closer">Make sure your watch is nearby</string>
+
+    <string name="about_oss_licenses">Software Licenses</string>
+    <string name="about_telegram_chat">Telegram Chat</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_donate">Support Me</string>
+    <string name="error_no_app_to_open_link">No app found to open link</string>
+    <string name="back_content_description">Back</string>
+    <string name="menu_content_description">Menu</string>
+</resources>
