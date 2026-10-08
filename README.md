@@ -1,8 +1,22 @@
 # WearOsZapya
 
+<p align="center">
+  <img src="art/banner.png" alt="WearOsZapya Banner" width="100%">
+</p>
+
 WearOsZapya is a file manager and high-speed file transfer app for Wear OS and Android, inspired by Zapya and SHAREit.
 
 Standard Wear OS file transfers run over Bluetooth, which caps speeds at roughly 20-50 KB/s. WearOsZapya adds a high-speed Wi-Fi and hotspot transfer mode that reaches 10-30 MB/s, while keeping Bluetooth as a reliable fallback. If you start a transfer over Bluetooth and Wi-Fi becomes available, the app switches transports automatically and continues from the exact byte where it left off.
+
+## Screenshots
+
+<p align="center">
+  <img src="art/screenshot_1.png" width="160" alt="Watch Home Screen">
+  <img src="art/screenshot_2.png" width="160" alt="Watch File Explorer">
+  <img src="art/screenshot_5.png" width="160" alt="Watch Settings">
+  <img src="art/screenshot_3.png" width="220" alt="Mobile Transfer Queue">
+  <img src="art/screenshot_4.png" width="220" alt="Mobile Donation Screen">
+</p>
 
 ## Features
 

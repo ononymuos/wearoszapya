@@ -21,6 +21,8 @@ app/google-services.json
 
 # Log / output
 *.log
+release_assets/
+wearoszapya-release.jks
 
 # Android Studio captures
 captures/

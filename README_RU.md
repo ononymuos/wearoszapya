@@ -1,12 +1,24 @@
-# WearOsZapya ⚡📱⌚
+# WearOsZapya
 
-WearOsZapya — сверхбыстрый инструмент для передачи файлов и файловый менеджер для Wear OS и Android в стиле Zapya и SHAREit.
+<p align="center">
+  <img src="art/banner.png" alt="WearOsZapya Banner" width="100%">
+</p>
 
-В отличие от традиционных решений для Wear OS, ограниченных только Bluetooth (~20–50 КБ/с), **WearOsZapya** оснащена **двухрежимным движком Turbo Boost**, который динамически переключается между Bluetooth и высокоскоростным Wi-Fi / Hotspot (10–30 МБ/с) **без прерывания передачи и с продолжением с точного байта**.
+WearOsZapya — инструмент для передачи файлов и файловый менеджер для Wear OS и Android в стиле Zapya и SHAREit.
 
----
+Стандартная передача файлов на Wear OS работает через Bluetooth со скоростью 20-50 КБ/с. WearOsZapya добавляет высокоскоростной режим Wi-Fi и точки доступа (10-30 МБ/с) с надежным переключением на Bluetooth при обрыве. Если начать передачу по Bluetooth, при подключении к Wi-Fi передача переключается автоматически и продолжается с точного байта.
 
-## ⚡ Основные возможности
+## Скриншоты
+
+<p align="center">
+  <img src="art/screenshot_1.png" width="160" alt="Главный экран часов">
+  <img src="art/screenshot_2.png" width="160" alt="Проводник файлов на часах">
+  <img src="art/screenshot_5.png" width="160" alt="Настройки на часах">
+  <img src="art/screenshot_3.png" width="220" alt="Очередь передачи на телефоне">
+  <img src="art/screenshot_4.png" width="220" alt="Экран донатов на телефоне">
+</p>
+
+## Основные возможности
 
 - ⚡ **Turbo Boost (Передача по Hotspot / Wi-Fi)**:
   - Прямой TCP-стриминг со скоростью 10–30 МБ/с.
