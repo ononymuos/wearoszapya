@@ -19,10 +19,10 @@ object TransferRepository {
         get() = availableNodes.find { it.id == selectedNodeId }?.status ?: ConnectionStatus.NOT_CONNECTED
 
     // Flow for signaling turbo switch events
-    private val _turboEvents = MutableSharedFlow<TurboConnectionInfo>(extraBufferCapacity = 5)
+    private val _turboEvents = MutableSharedFlow<TurboConnectionInfo>(replay = 1, extraBufferCapacity = 5)
     val turboEvents = _turboEvents.asSharedFlow()
 
-    private val _boostRequests = MutableSharedFlow<String>(extraBufferCapacity = 5)
+    private val _boostRequests = MutableSharedFlow<String>(replay = 1, extraBufferCapacity = 5)
     val boostRequests = _boostRequests.asSharedFlow()
 
     fun addItem(item: TransferItem) {
