@@ -56,9 +56,18 @@ class TurboNetworkManager(private val context: Context) {
     }
 
     fun requestHighSpeedWifi(
+        timeoutMs: Long = 7000L,
         onWifiReady: (ip: String) -> Unit,
-        onWifiLost: () -> Unit
+        onWifiLost: () -> Unit,
+        onTimeout: (() -> Unit)? = null
     ) {
+        val currentIp = getLocalIpAddress()
+        if (currentIp != null) {
+            Log.d(TAG, "Wi-Fi already connected with IP: $currentIp")
+            onWifiReady(currentIp)
+            return
+        }
+
         try {
             @Suppress("DEPRECATION")
             wifiLock = wifiManager.createWifiLock(
@@ -71,6 +80,8 @@ class TurboNetworkManager(private val context: Context) {
         } catch (e: Exception) {
             Log.w(TAG, "Failed to acquire wifi lock: ${e.message}")
         }
+
+        val wifiFound = AtomicBoolean(false)
 
         val request = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -90,12 +101,13 @@ class TurboNetworkManager(private val context: Context) {
                 // Allow a brief moment for DHCP / IP assignment
                 CoroutineScope(Dispatchers.IO).launch {
                     var ip: String? = null
-                    for (i in 0..10) {
+                    for (i in 0..15) {
                         ip = getLocalIpAddress()
                         if (ip != null) break
                         delay(200)
                     }
                     if (ip != null) {
+                        wifiFound.set(true)
                         Log.d(TAG, "Wi-Fi Ready with IP: $ip")
                         withContext(Dispatchers.Main) {
                             onWifiReady(ip)
@@ -117,6 +129,16 @@ class TurboNetworkManager(private val context: Context) {
             connectivityManager.requestNetwork(request, networkCallback!!)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to request Wi-Fi network: ${e.message}")
+        }
+
+        if (onTimeout != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(timeoutMs)
+                if (!wifiFound.get()) {
+                    Log.w(TAG, "Wi-Fi request timed out after $timeoutMs ms")
+                    onTimeout()
+                }
+            }
         }
     }
 

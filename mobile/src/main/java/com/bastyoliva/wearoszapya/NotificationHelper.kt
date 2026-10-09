@@ -73,6 +73,26 @@ class NotificationHelper(private val context: Context) {
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
+    fun showRemoteLaunchNotification() {
+        val openAppIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        val openAppPendingIntent = PendingIntent.getActivity(
+            context, 101, openAppIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.stat_notify_chat)
+            .setContentTitle(context.getString(R.string.mobile_app_name))
+            .setContentText("Watch requested to open phone app - tap to view")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setFullScreenIntent(openAppPendingIntent, true)
+            .setContentIntent(openAppPendingIntent)
+
+        notificationManager.notify(101, builder.build())
+    }
+
     fun getNotification(fileName: String, status: TransferStatus, progress: Int = 0): android.app.Notification {
         val title = when (status) {
             TransferStatus.SENDING -> context.getString(R.string.notification_sending_title)

@@ -1,5 +1,7 @@
 package com.bastyoliva.wearoszapya
 
+import android.content.Intent
+import android.provider.Settings
 import android.util.Log
 import com.bastyoliva.wearoszapya.data.TransferMode
 import com.bastyoliva.wearoszapya.data.TransferRepository
@@ -48,6 +50,33 @@ class TransferStatusListener : WearableListenerService() {
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error handling boost fallback: ${e.message}", e)
+                }
+            }
+
+            TurboConstants.PATH_OPEN_APP, "/open-app" -> {
+                Log.d(TAG, "Received open-app request from watch")
+                val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+                if (launchIntent != null) {
+                    try {
+                        startActivity(launchIntent)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Direct launch failed: ${e.message}")
+                    }
+                }
+                NotificationHelper(this).showRemoteLaunchNotification()
+            }
+
+            TurboConstants.PATH_OPEN_HOTSPOT_SETTINGS -> {
+                Log.d(TAG, "Received open-hotspot-settings request from watch")
+                try {
+                    val hotspotIntent = Intent("android.settings.TETHER_SETTINGS").apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    startActivity(hotspotIntent)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to open tether settings: ${e.message}")
                 }
             }
 

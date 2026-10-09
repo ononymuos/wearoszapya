@@ -138,6 +138,59 @@ class FileReceiverService : WearableListenerService() {
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
         when (messageEvent.path) {
+            TurboConstants.PATH_OPEN_APP, "/open-app" -> {
+                Log.d(TAG, "Received open-app request from phone")
+                val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+                if (launchIntent != null) {
+                    try {
+                        startActivity(launchIntent)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Direct launch failed: ${e.message}")
+                    }
+                }
+                showRemoteLaunchNotification()
+            }
+
+            TurboConstants.PATH_OPEN_WIFI_SETTINGS -> {
+                Log.d(TAG, "Received open-wifi-settings request from phone")
+                try {
+                    val wifiIntent = Intent(android.provider.Settings.ACTION_WIFI_SETTINGS).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    startActivity(wifiIntent)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to launch wifi settings: ${e.message}")
+                }
+            }
+
+            TurboConstants.PATH_BOOST_WAKE_WIFI -> {
+                Log.d(TAG, "Received wake-wifi request from phone")
+                turboNetworkManager.requestHighSpeedWifi(
+                    onWifiReady = { ip ->
+                        Log.d(TAG, "Wi-Fi woken up with IP: $ip")
+                        scope.launch {
+                            try {
+                                Wearable.getMessageClient(this@FileReceiverService)
+                                    .sendMessage(messageEvent.sourceNodeId, TurboConstants.PATH_BOOST_STATUS, "WIFI_READY|$ip".toByteArray())
+                                    .await()
+                            } catch (_: Exception) {}
+                        }
+                    },
+                    onWifiLost = {},
+                    onTimeout = {
+                        scope.launch {
+                            try {
+                                Wearable.getMessageClient(this@FileReceiverService)
+                                    .sendMessage(messageEvent.sourceNodeId, TurboConstants.PATH_BOOST_STATUS, "NO_WIFI".toByteArray())
+                                    .await()
+                            } catch (_: Exception) {}
+                        }
+                    }
+                )
+            }
+
             TurboConstants.PATH_BOOST_REQUEST -> {
                 val transferId = String(messageEvent.data)
                 Log.d(TAG, "Received boost request for transfer: $transferId from node: ${messageEvent.sourceNodeId}")
@@ -145,6 +198,30 @@ class FileReceiverService : WearableListenerService() {
                 enableTurboBoost(transferId, messageEvent.sourceNodeId)
             }
         }
+    }
+
+    private fun showRemoteLaunchNotification() {
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        val pendingIntent = android.app.PendingIntent.getActivity(
+            this,
+            201,
+            launchIntent,
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+        )
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.stat_notify_chat)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText("Phone requested to open watch app")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setFullScreenIntent(pendingIntent, true)
+            .setContentIntent(pendingIntent)
+
+        try {
+            notificationManager.notify(201, builder.build())
+        } catch (_: Exception) {}
     }
 
     private fun enableTurboBoost(transferId: String, nodeId: String) {
@@ -171,6 +248,16 @@ class FileReceiverService : WearableListenerService() {
                     try {
                         Wearable.getMessageClient(this@FileReceiverService)
                             .sendMessage(nodeId, TurboConstants.PATH_BOOST_FALLBACK, payload.toByteArray())
+                            .await()
+                    } catch (_: Exception) {}
+                }
+            },
+            onTimeout = {
+                Log.w(TAG, "Turbo Wi-Fi timeout for transfer $transferId")
+                scope.launch {
+                    try {
+                        Wearable.getMessageClient(this@FileReceiverService)
+                            .sendMessage(nodeId, TurboConstants.PATH_BOOST_STATUS, "NO_WIFI".toByteArray())
                             .await()
                     } catch (_: Exception) {}
                 }

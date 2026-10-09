@@ -15,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val navigateToUseCase: NavigateToUseCase,
-    private val openLinkOnPhoneUseCase: OpenLinkOnPhoneUseCase
+    private val openLinkOnPhoneUseCase: OpenLinkOnPhoneUseCase,
+    private val openAppOnPhoneUseCase: com.bastyoliva.wearable.settings.usecase.OpenAppOnPhoneUseCase
 ) : ViewModel() {
 
     var dialogState by mutableStateOf(DialogState.CLOSED)
@@ -26,6 +27,21 @@ class SettingsViewModel @Inject constructor(
 
             is Event.OnNavigateBack -> {
 
+            }
+
+            Event.OnOpenPhoneApp -> {
+                dialogState = DialogState.OPENING_PHONE
+                viewModelScope.launch {
+                    openAppOnPhoneUseCase().onSuccess {
+                        onEvent(Event.ShowDialog(isSuccessful = true))
+                    }.onFailure {
+                        onEvent(Event.ShowDialog(isSuccessful = false))
+                    }
+                }
+            }
+
+            Event.OnOpenTurboBoost -> {
+                dialogState = DialogState.TURBO_INFO
             }
 
             Event.OnNavigateToGitRepo -> {

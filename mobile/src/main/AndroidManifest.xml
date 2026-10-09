@@ -47,6 +47,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="*/*" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="wearoszapya" android:host="open" />
+            </intent-filter>
         </activity>
 
         <service
@@ -67,6 +74,10 @@
                 <data
                     android:host="*"
                     android:pathPrefix="/zapya"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/open-app"
                     android:scheme="wear" />
             </intent-filter>
         </service>

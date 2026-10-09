@@ -21,7 +21,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -70,13 +73,50 @@ class MainActivity : ComponentActivity() {
                     popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) + fadeOut() }
                 ) {
                     composable("main") {
+                        var showTurboDialog by remember { mutableStateOf(false) }
+                        val context = LocalContext.current
+
+                        if (showTurboDialog) {
+                            com.bastyoliva.wearoszapya.presentation.TurboBoostDialog(
+                                onDismissRequest = { showTurboDialog = false },
+                                onOpenWatchWifi = {
+                                    viewModel.openWatchWifiSettings(TransferRepository.selectedNodeId) { ok ->
+                                        val msg = if (ok) "Sent Wi-Fi settings command to watch" else "Could not reach watch"
+                                        android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                                },
+                                onWakeWatchWifi = {
+                                    viewModel.wakeWatchWifi(TransferRepository.selectedNodeId) { ok ->
+                                        val msg = if (ok) "Requested watch to activate Wi-Fi" else "Could not reach watch"
+                                        android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            )
+                        }
+
                         MainScreen(
                             availableNodes = TransferRepository.availableNodes,
                             selectedNodeId = TransferRepository.selectedNodeId,
                             sharedUris = viewModel.sharedUris,
                             onNodeSelected = { viewModel.onNodeSelected(it) },
                             onMenuClick = { navController.navigate("about") },
-                            onBoostClick = { navController.navigate("donation") }
+                            onBoostClick = { showTurboDialog = true },
+                            onOpenWatchClick = {
+                                android.widget.Toast.makeText(
+                                    context,
+                                    context.getString(R.string.opening_app_on_watch),
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                                viewModel.openAppOnWatch(TransferRepository.selectedNodeId) { success ->
+                                    if (!success) {
+                                        android.widget.Toast.makeText(
+                                            context,
+                                            context.getString(R.string.open_watch_failed),
+                                            android.widget.Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
                         )
                     }
                     composable("about") {
@@ -132,7 +172,8 @@ fun MainScreen(
     sharedUris: List<Uri>,
     onNodeSelected: (String) -> Unit,
     onMenuClick: () -> Unit = {},
-    onBoostClick: () -> Unit = {}
+    onBoostClick: () -> Unit = {},
+    onOpenWatchClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val fileSender = remember { WearableFileSender(context) }
@@ -167,11 +208,20 @@ fun MainScreen(
                         containerColor = Color.Transparent
                     ),
                     actions = {
+                        // Open on Watch Button
+                        IconButton(onClick = onOpenWatchClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_watch_check),
+                                contentDescription = stringResource(R.string.open_app_on_watch),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
                         // Boost Turbo Info Button
                         IconButton(onClick = onBoostClick) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_bolt),
-                                contentDescription = "Turbo Boost",
+                                contentDescription = stringResource(R.string.turbo_boost_title),
                                 tint = Color(0xFFFFB300)
                             )
                         }
@@ -189,7 +239,8 @@ fun MainScreen(
                     modifier = Modifier.padding(bottom = 8.dp),
                     nodes = availableNodes,
                     selectedNodeId = selectedNodeId,
-                    onNodeSelected = onNodeSelected
+                    onNodeSelected = onNodeSelected,
+                    onOpenOnWatch = { onOpenWatchClick() }
                 )
             }
         },

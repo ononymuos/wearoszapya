@@ -44,6 +44,61 @@ class WearableFileSender(private val context: Context) {
         }
     }
 
+    suspend fun openAppOnWatch(nodeId: String? = null): Boolean {
+        val targetNodeId = nodeId ?: TransferRepository.selectedNodeId ?: return false
+        var success = false
+
+        // 1. Try RemoteActivityHelper with deep link wearoszapya://open
+        try {
+            val helper = androidx.wear.remote.interactions.RemoteActivityHelper(context)
+            helper.startRemoteActivity(
+                Intent(Intent.ACTION_VIEW)
+                    .addCategory(Intent.CATEGORY_BROWSABLE)
+                    .setData(Uri.parse(com.bastyoliva.wearoszapya.data.TurboConstants.URI_SCHEME_OPEN)),
+                targetNodeId
+            )
+            success = true
+        } catch (e: Exception) {
+            Log.w("WearableFileSender", "RemoteActivityHelper failed: ${e.message}")
+        }
+
+        // 2. Also send Wearable message /zapya/open-app
+        try {
+            Wearable.getMessageClient(context)
+                .sendMessage(targetNodeId, com.bastyoliva.wearoszapya.data.TurboConstants.PATH_OPEN_APP, ByteArray(0))
+                .await()
+            success = true
+        } catch (e: Exception) {
+            Log.w("WearableFileSender", "MessageClient open-app failed: ${e.message}")
+        }
+
+        return success
+    }
+
+    suspend fun openWatchWifiSettings(nodeId: String? = null): Boolean {
+        val targetNodeId = nodeId ?: TransferRepository.selectedNodeId ?: return false
+        return try {
+            Wearable.getMessageClient(context)
+                .sendMessage(targetNodeId, com.bastyoliva.wearoszapya.data.TurboConstants.PATH_OPEN_WIFI_SETTINGS, ByteArray(0))
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun wakeWatchWifi(nodeId: String? = null): Boolean {
+        val targetNodeId = nodeId ?: TransferRepository.selectedNodeId ?: return false
+        return try {
+            Wearable.getMessageClient(context)
+                .sendMessage(targetNodeId, com.bastyoliva.wearoszapya.data.TurboConstants.PATH_BOOST_WAKE_WIFI, ByteArray(0))
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     fun sendFileToWear(uri: Uri) {
         val nodeId = TransferRepository.selectedNodeId ?: return
         val fileName = getFileName(uri) ?: context.getString(R.string.file_default_name)

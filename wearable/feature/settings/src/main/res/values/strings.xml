@@ -13,4 +13,8 @@
     <string name="sys_settings">System settings</string>
     <string name="send_success">Check your phone</string>
     <string name="send_git_failed">Failed to send to your phone</string>
+    <string name="open_phone_app">Open Phone App</string>
+    <string name="opening_phone_app">Opening on phone…</string>
+    <string name="open_wifi_settings">Wi-Fi Settings</string>
+    <string name="turbo_boost_info">High speed transfers up to 10 MB/s. Ensure Phone Hotspot or Wi-Fi is connected.</string>
 </resources>

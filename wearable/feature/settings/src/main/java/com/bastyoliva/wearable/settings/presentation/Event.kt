@@ -11,6 +11,10 @@ sealed class Event {
 
     object OnOpenDonate : Event()
 
+    object OnOpenPhoneApp : Event()
+
+    object OnOpenTurboBoost : Event()
+
     object CloseDialog : Event()
 
     data class ShowDialog (val isSuccessful: Boolean)  : Event()

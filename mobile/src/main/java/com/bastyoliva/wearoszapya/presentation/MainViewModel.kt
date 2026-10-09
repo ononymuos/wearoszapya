@@ -40,4 +40,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun onNodeSelected(nodeId: String) {
         TransferRepository.selectedNodeId = nodeId
     }
+
+    fun openAppOnWatch(nodeId: String? = null, onResult: ((Boolean) -> Unit)? = null) {
+        viewModelScope.launch {
+            val result = sender.openAppOnWatch(nodeId)
+            onResult?.invoke(result)
+        }
+    }
+
+    fun openWatchWifiSettings(nodeId: String? = null, onResult: ((Boolean) -> Unit)? = null) {
+        viewModelScope.launch {
+            val result = sender.openWatchWifiSettings(nodeId)
+            onResult?.invoke(result)
+        }
+    }
+
+    fun wakeWatchWifi(nodeId: String? = null, onResult: ((Boolean) -> Unit)? = null) {
+        viewModelScope.launch {
+            val result = sender.wakeWatchWifi(nodeId)
+            onResult?.invoke(result)
+        }
+    }
 }

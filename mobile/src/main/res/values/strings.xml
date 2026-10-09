@@ -41,4 +41,20 @@
     <string name="error_no_app_to_open_link">No app found to open link</string>
     <string name="back_content_description">Back</string>
     <string name="menu_content_description">Menu</string>
+
+    <string name="open_app_on_watch">Open on Watch</string>
+    <string name="opening_app_on_watch">Opening WearOsZapya on Watch…</string>
+    <string name="open_watch_success">Sent open command to watch</string>
+    <string name="open_watch_failed">Failed to reach watch</string>
+
+    <string name="turbo_boost_title">⚡ Turbo Boost (Wi-Fi)</string>
+    <string name="turbo_boost_desc">Transfers files up to 10 MB/s via direct Wi-Fi sockets instead of the Bluetooth proxy (~30 KB/s).</string>
+    <string name="turbo_boost_step1">1. Turn on Phone Hotspot or connect both devices to the same Wi-Fi.</string>
+    <string name="turbo_boost_step2">2. Ensure Watch is connected to that Wi-Fi network.</string>
+    <string name="turbo_boost_step3">3. File transfers will stream at maximum speeds automatically.</string>
+    <string name="action_open_hotspot">Open Hotspot Settings</string>
+    <string name="action_open_phone_wifi">Open Phone Wi-Fi Settings</string>
+    <string name="action_open_watch_wifi">Open Watch Wi-Fi Settings</string>
+    <string name="action_wake_watch_wifi">Wake Watch Wi-Fi</string>
+    <string name="action_dismiss">Got It</string>
 </resources>

@@ -33,44 +33,87 @@ fun SettingsScreen(
 ) {
 
 
+    val context = LocalContext.current
+    val transformationSpec = rememberTransformationSpec()
+
     Dialog(
-        showDialog = dialogState != DialogState.CLOSED, onDismissRequest = {
+        showDialog = dialogState != DialogState.CLOSED,
+        onDismissRequest = {
             onEvent(Event.CloseDialog)
-        }) {
+        }
+    ) {
         Alert(
             icon = {
-                if (dialogState == DialogState.SUCCESS) {
-                    Icon(
-                        imageVector = Icons.Check,
-                        contentDescription = stringResource(R.string.send_success)
-                    )
-                } else if (dialogState == DialogState.FAILED) {
-                    Icon(
-                        imageVector = Icons.Error,
-                        contentDescription = stringResource(R.string.send_git_failed)
-                    )
+                when (dialogState) {
+                    DialogState.SUCCESS -> {
+                        Icon(
+                            imageVector = Icons.Check,
+                            contentDescription = stringResource(R.string.send_success)
+                        )
+                    }
+                    DialogState.FAILED -> {
+                        Icon(
+                            imageVector = Icons.Error,
+                            contentDescription = stringResource(R.string.send_git_failed)
+                        )
+                    }
+                    DialogState.OPENING_PHONE -> {
+                        Icon(
+                            imageVector = Icons.MobileArrowRight,
+                            contentDescription = stringResource(R.string.open_phone_app)
+                        )
+                    }
+                    DialogState.TURBO_INFO -> {
+                        Icon(
+                            imageVector = Icons.Bolt,
+                            contentDescription = stringResource(R.string.turbo_boost)
+                        )
+                    }
+                    else -> {}
                 }
-
             },
             title = {
-
                 Text(
                     text = when (dialogState) {
-                        DialogState.SUCCESS -> {
-                            stringResource(R.string.send_success)
-                        }
-
-                        DialogState.FAILED -> {
-                            stringResource(R.string.send_git_failed)
-                        }
-
+                        DialogState.SUCCESS -> stringResource(R.string.send_success)
+                        DialogState.FAILED -> stringResource(R.string.send_git_failed)
+                        DialogState.OPENING_PHONE -> stringResource(R.string.opening_phone_app)
+                        DialogState.TURBO_INFO -> stringResource(R.string.turbo_boost)
                         else -> ""
-                    }, textAlign = TextAlign.Center
+                    },
+                    textAlign = TextAlign.Center
                 )
             },
-
-            ) {
-
+            message = {
+                if (dialogState == DialogState.TURBO_INFO) {
+                    Text(
+                        text = stringResource(R.string.turbo_boost_info),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        ) {
+            if (dialogState == DialogState.TURBO_INFO) {
+                item {
+                    androidx.wear.compose.material3.Button(
+                        onClick = {
+                            onEvent(Event.CloseDialog)
+                            try {
+                                val wifiIntent = android.content.Intent(android.provider.Settings.ACTION_WIFI_SETTINGS).apply {
+                                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(wifiIntent)
+                            } catch (_: Exception) {}
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.open_wifi_settings),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -82,15 +125,10 @@ fun SettingsScreen(
         last = ColumnItemType.Button,
     )
 
-    val transformationSpec = rememberTransformationSpec()
-
     ScreenScaffold(
         scrollState = columnState,
         contentPadding = contentPadding,
     ) { contentPadding ->
-
-
-        val context = LocalContext.current
 
         TransformingLazyColumn(
             state = columnState,
@@ -116,11 +154,23 @@ fun SettingsScreen(
             item {
                 FileItem(
                     transformationSpec = transformationSpec,
+                    text = stringResource(R.string.open_phone_app),
+                    icon = Icons.MobileArrowRight,
+                    type = com.bastyoliva.wearable.design.components.items.FileItemType.PRIMARY,
+                    onClick = {
+                        onEvent(Event.OnOpenPhoneApp)
+                    },
+                )
+            }
+
+            item {
+                FileItem(
+                    transformationSpec = transformationSpec,
                     text = stringResource(R.string.turbo_boost),
                     icon = Icons.Bolt,
                     type = com.bastyoliva.wearable.design.components.items.FileItemType.PRIMARY,
                     onClick = {
-                        // Shows active status indicator
+                        onEvent(Event.OnOpenTurboBoost)
                     },
                 )
             }

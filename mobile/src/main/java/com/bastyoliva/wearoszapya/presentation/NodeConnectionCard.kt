@@ -27,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -56,7 +57,8 @@ fun NodeSelectionPager(
     modifier: Modifier = Modifier,
     nodes: List<WearNode>,
     selectedNodeId: String?,
-    onNodeSelected: (String) -> Unit
+    onNodeSelected: (String) -> Unit,
+    onOpenOnWatch: ((String) -> Unit)? = null
 ) {
     if (nodes.isEmpty()) {
         NodeConnectionCard(
@@ -93,7 +95,8 @@ fun NodeSelectionPager(
         NodeConnectionCard(
             name = node.name,
             status = node.status,
-            isSelected = node.id == selectedNodeId
+            isSelected = node.id == selectedNodeId,
+            onOpenOnWatch = onOpenOnWatch?.let { { it(node.id) } }
         )
     }
 }
@@ -104,7 +107,8 @@ fun NodeConnectionCard(
     modifier: Modifier = Modifier,
     name: String,
     isSelected: Boolean,
-    status: ConnectionStatus
+    status: ConnectionStatus,
+    onOpenOnWatch: (() -> Unit)? = null
 ) {
     val isReady = status == ConnectionStatus.READY
 
@@ -198,7 +202,7 @@ fun NodeConnectionCard(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
 
                 AnimatedVisibility(
                     name.isNotEmpty()
@@ -229,6 +233,20 @@ fun NodeConnectionCard(
                     },
                     style = MaterialTheme.typography.bodySmall,
                 )
+            }
+
+            if (isReady && onOpenOnWatch != null) {
+                IconButton(
+                    onClick = onOpenOnWatch,
+                    modifier = Modifier.size(42.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_watch_check),
+                        contentDescription = stringResource(R.string.open_app_on_watch),
+                        tint = contentColor,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }

@@ -80,4 +80,5 @@ dependencies {
     implementation(libs.oss.licenses.droibit)
     implementation(libs.material.kolor)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.wear.remote.interactions)
 }
