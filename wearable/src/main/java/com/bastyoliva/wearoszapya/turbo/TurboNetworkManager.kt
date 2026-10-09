@@ -217,6 +217,9 @@ class TurboNetworkManager(private val context: Context) {
     fun release() {
         isRunning.set(false)
         closeSockets()
+        try {
+            connectivityManager.bindProcessToNetwork(null)
+        } catch (_: Exception) {}
         networkCallback?.let {
             try {
                 connectivityManager.unregisterNetworkCallback(it)
