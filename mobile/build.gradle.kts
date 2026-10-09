@@ -61,6 +61,9 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -81,4 +84,7 @@ dependencies {
     implementation(libs.material.kolor)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.wear.remote.interactions)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
+    testImplementation("org.mockito:mockito-core:5.11.0")
 }
