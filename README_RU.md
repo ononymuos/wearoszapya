@@ -1,6 +1,7 @@
 # WearOsZapya
 
 <p align="center">
+  <img src="art/icon.png" alt="WearOsZapya Icon" width="120"><br>
   <img src="art/banner.png" alt="WearOsZapya Banner" width="100%">
 </p>
 
